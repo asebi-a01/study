@@ -1,6 +1,8 @@
 # Summary
 1. Create two Almalinux Servers on Vagrant.
-2. 
+2. Setup node server to allow ssh connection
+3. Setup controller server to use ansible
+4. Try to use ansible playbook on controller server
 
 # Prerequisite
 - You need to have [Vagrant](https://www.vagrantup.com/) already installed on your computer.
@@ -41,10 +43,22 @@ It will create the following servers.
 |1|controller|192.168.0.10| Almalinux 9 | 1 | 1024 MB |
 |2|node1|192.168.0.20| Almalinux 9 | 1 | 1024 MB |
 
+## Start Vagrant insntances
+```
+vagrant up
+```
+
 
 # Setup node1
 
 ## set root password on almalinux02
+
+Log in to node1
+```
+vagrant ssh node1
+```
+
+
 Change root password
 ```
 sudo passwd root
@@ -120,6 +134,11 @@ Max kernel policy version:      33
 ```
 
 # Install ansible on controller
+Log in to controller
+```
+vagrant ssh controller
+```
+
 Install pip package
 ```
 sudo dnf install pip -y
@@ -213,7 +232,7 @@ cd ansible
 Create inventory.ini
 
 ```
-vi indentory.ini
+vi inventory.ini
 ```
 write below, and exit vi with `:wq`
 ```
