@@ -12,24 +12,23 @@
 Create Vagrantfile
 ```
 Vagrant.configure("2") do |config|
-  config.vm.define "controller" do |almalinux01|
-    almalinux01.vm.box = "almalinux/9"
-    almalinux01.vm.hostname = "almalinux01"
-    almalinux01.vm.network "private_network", ip: "192.168.0.10"
-    almalinux01.vm.network "forwarded_port", guest: 9090, host: 9090
+  config.vm.define "controller" do |controller|
+    controller.vm.box = "almalinux/9"
+    controller.vm.hostname = "controller"
+    controller.vm.network "private_network", ip: "192.168.0.10"
 
-    almalinux01.vm.provider "libvirt" do |vb|
-      vb.cpus = "1"
-      vb.memory = "1024"
+    controller.vm.provider "libvirt" do |vb|
+      vb.cpus = "2"
+      vb.memory = "2048"
     end
   end
 
-  config.vm.define "node1" do |almalinux02|
-    almalinux02.vm.box = "almalinux/9"
-    almalinux02.vm.hostname = "almalinux02"
-    almalinux02.vm.network "private_network", ip: "192.168.0.20"
+  config.vm.define "node1" do |node1|
+    node1.vm.box = "almalinux/9"
+    node1.vm.hostname = "node1"
+    node1.vm.network "private_network", ip: "192.168.0.20"
 
-    almalinux02.vm.provider "libvirt" do |vb|
+    node1.vm.provider "libvirt" do |vb|
       vb.cpus = "1"
       vb.memory = "1024"
     end
@@ -51,7 +50,7 @@ vagrant up
 
 # Setup node1
 
-## set root password on almalinux02
+## set root password on node1
 
 Log in to node1
 ```
@@ -68,7 +67,7 @@ Verify that you can log in as root
 ```
 su -
 ```
-## change sshd_config on almalinux02
+## change sshd_config on node1
 backup sshd_config
 ```
 cp -p /etc/ssh/sshd_config /etc/ssh/sshd_config.bk
@@ -265,7 +264,7 @@ vi ~/ansible/playbook.yml
 
 ```
 ---
-- name: Show the hostname of almalinux02
+- name: Show the hostname of node1
   hosts: servers
   tasks:
     - name: Execute the hostname command
@@ -295,7 +294,7 @@ node1 | SUCCESS => {
 [vagrant@controller ansible]$ vi ~/ansible/playbook.yml
 [vagrant@controller ansible]$ ansible-playbook -i ~/ansible/inventory.ini playbook.yml
 
-PLAY [Show the hostname of almalinux02] ***************************************************************************
+PLAY [Show the hostname of node1] ***************************************************************************
 
 TASK [Gathering Facts] ********************************************************************************************
 ok: [node1]
